@@ -1,0 +1,52 @@
+services:
+  mongodb:
+    image: mongo:8.0
+    container_name: mongodb-container-iot
+    #restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root  
+      MONGO_INITDB_ROOT_PASSWORD: iot
+    networks:
+      - mongo-network
+    volumes:
+      - mongo-data:/data/db  # Optional: Persist MongoDB data
+
+
+  backend:
+    image: node:18.18-alpine  
+    container_name: backend-iot
+    working_dir: /app 
+    volumes:
+      - ./backend:/app
+    entrypoint: ["sh", "-c", "npm install; cp .env-example .env ;npm run dev"]
+    depends_on:
+      - mongodb 
+    #environment:
+      #DATABASE_URL: "mongodb://root:iot@mongodb:27017/tms?authSource=admin" # To change with AWS database. Should be modified in the .env of backend when terraform is run, and removed here
+    networks:
+      - mongo-network
+    ports:
+      - "4000:4000" # Assuming your app runs on port 4000
+
+
+  frontend:
+    image: node:18
+    container_name: frontend-iot
+    working_dir: /app 
+    volumes:
+      - ./frontend:/app
+    entrypoint: ["sh", "-c", "cd /app; npm install; cp .env-example .env ; npm run dev --host"]
+    depends_on:
+      - backend
+    ports:
+      - '80:5173'
+    networks:
+      - mongo-network
+    
+volumes:
+  mongo-data:
+
+networks:
+  mongo-network:
