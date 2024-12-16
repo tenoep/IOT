@@ -56,6 +56,28 @@ class SerieController {
       next(error);
     }
   }
+
+  async getSeriesByUserId(req, res, next) {
+    try {
+      const userId = req.params.userId;
+      const series = await SerieService.getSeriesByUserId(userId);
+      res.json(series);
+    } catch (error) {
+      log.error("Failed to retrieve series by user ID", { error });
+      next(error);
+    }
+  }
+
+  async generateSeriesByAI(req, res, next) {
+    try {
+      const userId = req.params.userId;
+      const createdSeries = await SerieService.generateSeriesByAI(userId);
+      res.status(201).json(createdSeries);
+    } catch (error) {
+      log.error("Failed to generate series by AI", { error });
+      next(error);
+    }
+  }
 }
 
 module.exports = new SerieController();

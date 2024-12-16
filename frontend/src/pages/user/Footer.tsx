@@ -6,7 +6,7 @@ const Footer = () => {
       <div className="relative flex items-center justify-around w-full h-20">
         {/* AI Training */}
         <div className="flex flex-col items-center">
-          <Link to="/" className="flex flex-col items-center hover:opacity-80">
+          <Link to="/user/training" className="flex flex-col items-center hover:opacity-80">
             <img
               src="https://cdn-icons-png.flaticon.com/128/10817/10817271.png"
               alt="AI Training Icon"

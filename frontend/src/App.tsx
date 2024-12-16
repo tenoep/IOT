@@ -11,6 +11,7 @@ import ListUserAdmin from "./pages/admin/adminPageUser";
 import ListDumbbellAdmin from "./pages/admin/adminPageDumbbell";
 import Support from "./pages/user/Support";
 import StatisticsPage from "./pages/user/Statistics";
+import GenerateSeriesPage from "./pages/user/AITraining";
 
 const App: React.FC = () => {
   return (
@@ -23,12 +24,15 @@ const App: React.FC = () => {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/client" element={<HomePageClients />} />
           <Route path="/" element={<Login />}></Route>
+          <Route path="/id/:param?" element={<Login />}></Route>
           <Route path="/register" element={<Register />}></Route>
+          <Route path="/register/id/:param?" element={<Register />}></Route>
           <Route path="/admin" element={<HomePageAdmin />} />
           <Route path="/admin/user" element={<ListUserAdmin />} />
           <Route path="/admin/dumbbell" element={<ListDumbbellAdmin />} />
           <Route path="/user/support" element={<Support />} />
           <Route path="/user/statistics" element={<StatisticsPage />} />
+          <Route path="/user/training" element={<GenerateSeriesPage />} />
         </Routes>
       </Router>
     </div>

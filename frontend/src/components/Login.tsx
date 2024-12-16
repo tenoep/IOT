@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useParams } from 'react-router-dom';
 
 interface LoginForm {
   login: string;
@@ -13,9 +14,19 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
 
   const register = () => {
-    navigate("/register");
+    if (param) {
+      navigate(`/register/id/${param}`);
+    } else {
+      navigate("/register");
+    }
   };
 
+  const { param } = useParams();
+  if (param){
+    sessionStorage.setItem("DumbellId", param)
+  } //else {
+    //sessionStorage.removeItem("DumbellId")
+  //}
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -34,6 +45,17 @@ const Login: React.FC = () => {
       sessionStorage.setItem("userId", _id);
       sessionStorage.setItem("role", role);
       sessionStorage.setItem("login", login);
+
+      if (param){
+        console.log(_id, param)
+        const dataRes = { "userId":_id, "dumbbellId":param};
+        const response = await axios.post(
+          `${process.env.BACKEND_URL}/arduino/register/dumbell`,
+          dataRes,
+        );
+        if (response.status != 200)
+          console.log("error registering dumbell")
+      }
 
       // Redirection en fonction du rôle "admin", "user", "manager"
       switch (role) {

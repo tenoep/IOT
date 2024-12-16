@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useParams } from 'react-router-dom';
 
 interface UserForm {
   login: string;
@@ -30,10 +31,16 @@ const Register: React.FC = () => {
     setSuccess(null);
   }, []);
 
+  const { param } = useParams();
+
   const navigate = useNavigate();
 
   const login = () => {
-    navigate("/");
+    if (param) {
+      navigate(`/id/${param}`);
+    } else {
+      navigate("/");
+    }
   };
 
   function timeout(delay: number) {
@@ -56,7 +63,7 @@ const Register: React.FC = () => {
       setSuccess("Utilisateur créé avec succès ! Redirection...");
       setForm({ login: "", password: "", email: "" });
       await timeout(2000);
-      navigate("/");
+      login();
     } catch (err: any) {
       console.log(err.response?.data?.error);
       setError("Erreur lors de la création de l'utilisateur");
@@ -120,6 +127,7 @@ const Register: React.FC = () => {
             <button
               type="submit"
               className="Rectangle53 w-[205px] h-[53px] bg-black rounded-[10px] text-white text-xl font-normal font-['Inter']"
+              onClick={handleSubmit}
             >
               Créer un compte
             </button>
