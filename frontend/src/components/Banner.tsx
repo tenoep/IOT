@@ -16,6 +16,7 @@ const Banner: React.FC<BannerProps> = ({ subtitle, redirectPath }) => {
   useEffect(() => {
     const login = sessionStorage.getItem("login");
     const id = sessionStorage.getItem("userId");
+    const dumbell = sessionStorage.getItem("dumbellId");
     setUserLogin(login);
     setUserId(id);
   }, []);
@@ -128,6 +129,20 @@ const Banner: React.FC<BannerProps> = ({ subtitle, redirectPath }) => {
             </div>
             <Clock />
           </div>
+
+          {sessionStorage.getItem("DumbellId") && 
+          (
+            <div className="flex flex-col items-center h-screen justify-center  " >
+            <img
+                src="/dumbell.png"
+                style={{
+                  height: "30px", // Taille pour ordinateur
+                }}
+            />
+            <h1 className="text-xs">Connecté: {sessionStorage.getItem("DumbellId")}</h1>
+            </div>
+          )}
+          
 
           {/* Logo parfaitement centré */}
           <div

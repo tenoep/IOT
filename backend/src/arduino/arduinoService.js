@@ -35,12 +35,13 @@ const registerDumbell = async (reqData) => {
 
 const handleArduinoData = async (reqData) => {
   log.info("Entering handleArduinoData");
+  const dateDone = Date.now();
 
   try {
     // Destructure and validate input data
-    const { dumbbellId, repetitionsDone, timeDone, weightDone, dateDone } = reqData;
+    const { dumbbellId, repetitionsDone, timeDone, weightDone} = reqData;
 
-    if (!dumbbellId || !repetitionsDone || !timeDone || !weightDone || !dateDone) {
+    if (!dumbbellId || !repetitionsDone || !timeDone || !weightDone) {
       throw new Error("Missing required parameters in request data");
     }
 

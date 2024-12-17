@@ -15,12 +15,36 @@ const GenerateSeriesPage = () => {
 
     try {
       const userId = sessionStorage.getItem("userId");
-      const response = await axios.post(
+      if (!userId) {
+        throw new Error("User ID introuvable dans sessionStorage.");
+      }
+
+      // Appel pour générer les séries
+      const seriesResponse = await axios.post(
         `${process.env.BACKEND_URL}/serie/recommend/${userId}`
       );
       setResponseMessage("Séries générées avec succès !");
-      setSeriesList(response.data);
-      console.log("Réponse du serveur :", response.data);
+      setSeriesList(seriesResponse.data);
+
+      console.log("Réponse du serveur (séries) :", seriesResponse.data);
+
+      // Gestion du dumbbellId
+      const dumbbellId = sessionStorage.getItem("DumbellId");
+      if (dumbbellId) {
+        const dataRes = { userId, dumbbellId };
+        const registerResponse = await axios.post(
+          `${process.env.BACKEND_URL}/arduino/register/dumbell`,
+          dataRes
+        );
+
+        if (registerResponse.status !== 200) {
+          console.error("Erreur lors de l'enregistrement du dumbbell :", registerResponse.status);
+        } else {
+          console.log("Dumbbell enregistré avec succès !");
+        }
+      } else {
+        console.warn("DumbellId introuvable dans sessionStorage.");
+      }
     } catch (error) {
       console.error("Erreur lors de la génération des séries :", error);
       setResponseMessage("Erreur lors de la génération des séries.");
@@ -28,7 +52,6 @@ const GenerateSeriesPage = () => {
       setIsLoading(false);
     }
   };
-
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
       <Banner subtitle="Générer des séries IA" redirectPath="/support" />
