@@ -9,23 +9,40 @@ const StatisticsPage = () => {
   const [view, setView] = useState("day"); // Vue actuelle : jour, semaine, mois
   // const [sessionData, setSessionData] = useState([]);
   const [seriesData, setSeriesData] = useState([]);
+  const [userId, setUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const id = sessionStorage.getItem("userId");
+    if (id) {
+      setUserId(id);
+    } else {
+      console.error("userId not found in sessionStorage");
+    }
+  }, []);
 
   useEffect(() => {
     const fetchStatistics = async () => {
+      if (!userId) return; // Arrêter si userId est null
       try {
-        const [series] = await Promise.all([
-          // axios.get(`${process.env.BACKEND_URL}/sessions`),
-          axios.get(`${process.env.BACKEND_URL}/serie`),
-        ]);
-        // setSessionData(sessions.data);
-        setSeriesData(series.data);
+        const response = await axios.get(
+          `${process.env.BACKEND_URL}/serie/user/${userId}`
+        );
+        setSeriesData(response.data);
       } catch (error) {
         console.error("Error fetching statistics data:", error);
       }
     };
 
     fetchStatistics();
-  }, []);
+  }, [userId]);
+
+  if (!userId) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen">
+        <p>Chargement des données...</p>
+      </div>
+    );
+  }
 
   // Filtrage des données par date en fonction de la vue sélectionnée
   const filterByDate = (data, dateField) => {
